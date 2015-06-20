@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# making index-page
+
+#source etc/config
+
+mkindex()
+{
+PAGE=index
+./$template/html-begin
+./$template/head $PAGE
+./$template/style
+./$template/table-main
+source ./$template/pages-list
+source ./$template/tags
+source ./$template/posts-prev
+./$template/footer-pre
+./$template/footer
+./$template/html-end
+}
+
+decho "Making index.html page..."
+mkindex > $out/index.html
+decho "Complete"
+
+
+

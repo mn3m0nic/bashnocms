@@ -1,0 +1,54 @@
+#!/bin/bash
+#-----------------------------------------------------------------------------#
+# generating posts
+#-----------------------------------------------------------------------------#
+#source etc/config
+#source lib/comm
+
+mkpost()
+{
+	post1=$1
+	name=$2
+	#decho ">>> $page from $pages/$page "
+        ./$template/html-begin
+	./$template/head $name
+	./$template/style
+        ./$template/table-main
+	selected_page="/"
+        source ./$template/pages-list "/"
+        source ./$template/tags
+	date=$(grep -i "{{{ date" $posts/$post1 | awk -F" " '{print $3}' | head -n 1)
+	[ -z "$date" ] && date=$(stat -c "%y" $posts/$post1 | awk -F"." '{print $1}')
+	### CONTENT OF POST ###
+	echo "<div class=message>"
+	echo "<p align=right><small>"$date"</small></p>"
+	echo "<pre>"
+	cat $posts/$post1 | egrep -v '^{{{ '
+	echo "</div>"
+	### END CONENT POST ###
+        ./$template/footer-pre
+        ./$template/footer
+        ./$template/html-end
+}
+
+mkposts-content()
+{
+	decho "making all POSTS content..."
+	for post in `find data/posts/ -type f -printf "%f "`; do
+		name=$(grep -i "{{{ name" $posts/$post | awk '{print $3}' | head -n 1)
+		link=$(grep -i "{{{ link" $posts/$post | awk '{print $3}' | head -n 1)
+		tags=$(grep -i "{{{ tag" $posts/$post | awk '{print $3}' | head -n 1)
+		[ -z "$name" ] && name=$(echo "$post"|sed -e 's|\.html||')
+		#echo "<a class=\"$class\" href=\""$url"\">"$name"</a>"
+		if [ -z "$link" ]; then
+			decho "Making post $post ..."
+			mkpost $post $name > $out"/"$post".html"
+			decho "Complete"
+		else
+			decho "Skipping post ... $post "
+		fi
+	done
+	decho "POSTS processing complete."
+}
+
+mkposts-content

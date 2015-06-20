@@ -1,0 +1,62 @@
+#!/bin/bash
+
+LIBS_LOADED=1
+
+#echo "included ok"
+
+decho()
+{
+	if [ "$DEBUG" == "1" ]; then
+		tput setaf 3
+		echo "DEBUG: $@"
+		tput sgr0
+	fi
+}
+
+secho()
+{
+	#tput sc	
+	tput setaf 2
+        echo -n ">> $@   <<"
+	tput sgr0
+	#tput rc
+}
+
+
+calert()
+{
+        tput -S <<EOL
+        bold
+        setaf 7
+        setab 1
+EOL
+}
+	
+
+cl()
+{
+        tput sgr0
+}
+
+aecho()
+{
+	calert; echo "$@"; cl
+}
+
+cnormal()
+{
+        tput -S <<EOL
+        setaf 2
+        setab 0
+EOL
+}
+
+cok()
+{
+        tput -S <<EOL
+        bold
+        setaf 3 
+        setab 2 
+EOL
+}
+

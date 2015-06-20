@@ -1,0 +1,14 @@
+#!/bin/bash
+# FOOTER
+# 
+#
+#
+
+cat << EOF
+<div align="center">
+<font color="gray" size="2pt">
+no CMS. just site. (c) 2015<br>
+no ADS, no Google, no cookies<br>
+Nick Void</font>
+</div>
+EOF

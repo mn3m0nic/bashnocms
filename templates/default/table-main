@@ -1,0 +1,11 @@
+#!/bin/bash
+cat << EOF
+<body>
+<table id="main">
+<tr>
+<td align="center">
+<p id="title">
+ⓜ ⓝ ③ ⓜ ⊙ ⓘ ⓝ ⓕ ⓪
+</p>
+EOF
+

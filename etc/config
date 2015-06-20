@@ -1,0 +1,19 @@
+#!/bin/bash
+sitename=some-site
+template=templates/default
+cache=cache
+#points to build file
+data=data
+out=out/pub
+static=$data/pub
+posts=$data/posts
+pages=$data/pages
+tags=1
+debug=1
+
+
+tags_map=$cache/tags-map
+tags_index=$cache/tags-index
+
+
+template_title="sitename"

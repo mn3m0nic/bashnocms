@@ -1,0 +1,203 @@
+#!/bin/bash
+# BASH noCMS site generator for personal blogging.
+# v 0.01
+# Nick Void(c) mn3m00@gmail.com
+#
+# Support:
+# - pages publishing;
+# - tags;
+# - posts;
+#
+# --------------------------------------------------------------------------- #
+#
+# TODO:
+
+
+#	+----- include all
+#	+----- if not configured - configure
+#	+----- check action
+#	+----- do action
+
+
+LIBS=$(find lib/ -type f -name "*"|tr "\n" " ")
+CONF="etc/config"
+COMM="lib/comm"
+
+DEBUG=1
+
+decho()
+{
+	if [ "$DEBUG" == "1" ]; then
+		tput setaf 3
+		echo "DEBUG: $@"
+		tput sgr0
+	fi
+}
+
+secho()
+{
+	#tput sc	
+	tput setaf 2
+        echo -n ">> $@   <<"
+	tput sgr0
+	#tput rc
+}
+
+calert()
+{
+        tput -S <<EOL
+        bold
+        setaf 7
+        setab 1
+EOL
+}
+
+cl()
+{
+        tput sgr0
+}
+
+aecho()
+{
+	calert; echo "$@"; cl
+}
+
+cnormal()
+{
+        tput -S <<EOL
+        setaf 2
+        setab 0
+EOL
+}
+
+cok()
+{
+        tput -S <<EOL
+        bold
+        setaf 3 
+        setab 2 
+EOL
+}
+
+
+inc()
+{
+	for lib in $LIBS; do 
+		decho "including-->$lib"
+		source "$lib"; 
+	done
+	if [ ! "$LIBS_LOADED" == "1" ]; then
+		echo "common library not found."
+		exit
+	fi
+}
+
+config()
+{
+	if [ -f "$CONF" ]; then
+        	source "$CONF"
+		decho "Configuration readed ok."
+	else
+		echo "Configuration file $CONF not exist."
+		echo "Please create it or run configure."
+		exit
+	fi
+}
+
+comp_check()
+{
+	decho "Checking binaries and compatible environment..."
+	# TODO: Add code here... :)
+	# ...
+	decho "Complete."
+}
+
+params()
+{
+	ACTION=""
+	run=$(basename $0)
+	if [ -z "$1" ]; then
+		echo ""		
+		if [ "$run" !=  "bnocms.sh" ]; then
+			ACTION=$run
+		fi
+	fi
+}
+
+
+cleanfiles()
+{
+	rm -rfv $out
+}
+
+buildall()
+{
+        [ ! -d "$out" ] && mkdir -p $out
+        echo -n "rsync static ..."
+	rsync -a $static/ $out/
+	echo "done."
+        source $template/build
+}
+
+
+act()
+{
+	case $ACTION in
+		build)
+			cleanfiles
+			buildall
+			;;
+		refresh)
+			decho "Refreshing pages..."
+			# TODO: 
+			# add code here
+			# ... 
+
+			#publish_pages
+
+			decho "Complete."
+			;;
+		clean)
+			cleanfiles
+			;;
+		post)
+			echo "Adding new post..."
+                        # TODO: 
+                        # add code here
+                        # ... 
+                        echo "Complete."
+                        ;;
+                page)
+                        echo "Adding new page..."
+                        # TODO: 
+                        # add code here
+                        # ... 
+                        echo "Complete."
+                        ;;
+
+		b)
+			echo "You should not run this file from this dir."
+			exit 1
+			;;
+		*)
+			echo "Unknown action: $ACTION"
+			exit
+	esac
+
+
+
+}
+
+main()
+{
+	inc
+	config
+	comp_check
+	params
+	act
+	decho $BPARSE
+}
+
+
+main "$@"
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+#
+#
+template_name="default1"
+
+decho "Working in template $template_name..."
+source ./$template/tags-init
+source ./$template/pages
+source ./$template/posts
+source ./$template/index
+decho "template building complete."

@@ -1,0 +1,114 @@
+#!/bin/bash
+#-----------------------------------------------------------------------------#
+# SOME POSTS PREVIEW
+# in INDEX-page 
+#
+#-----------------------------------------------------------------------------#
+
+oldd()
+{
+for i in `seq 1 5`; do
+cat << EOF
+<hr>
+<div class="message">
+<table class="message" >
+<tr>
+<td width="150px"><a class="tag" href="baker.html">Simple</a><a class="tag" href="baker.html">GNU</a></td>
+<td width="*"><font size="5pt">Title message</font></td>
+<td width="50px"><font size="2pt">2015.05.01 01:22</font></td></tr>
+<tr><td colspan=3>Content message... Content message Content message Content messageContent message Content message 
+Content message
+Content message
+Content messageContent messageContent messageContent message  Content message
+Content message Content message Content messageContent messageContent message Content messageContent message
+<a class="page" href="ss">[Read more...]</a>
+</td></tr>
+</table>
+</div>
+EOF
+done
+}
+
+#-----------------------------------------------------------------------------#
+#source etc/config
+#source lib/comm
+
+mkpost()
+{
+	post1=$1
+	name=$2
+	#decho ">>> $page from $pages/$page "
+        ./$template/html-begin
+	./$template/head $name
+	./$template/style
+        ./$template/table-main
+	selected_page=$page1
+        source ./$template/pages-list ""
+        source ./$template/tags
+	date=$(grep -i "{{{ date" $posts/$post1 | awk -F" " '{print $3}' | head -n 1)
+	[ -z "$date" ] && date=$(stat -c "%y" $posts/$post1 | awk -F"." '{print $1}')
+	### CONTENT OF POST ###
+	echo "<div class=message>"
+	echo "<p align=right><small>"$date"</small></p>"
+	echo "<pre>"
+	cat $posts/$post1 | egrep -v '^{{{ '
+	echo "</div>"
+	### END CONENT POST ###
+        ./$template/footer-pre
+        ./$template/footer
+        ./$template/html-end
+}
+
+mkposts-prev()
+{
+	#decho "making all POSTS content..."
+	#for post in `find data/posts/ -type f -printf "%f "`; do
+	let c=0
+
+	echo "<table>"
+
+	#for post in `find $posts/ -type f -printf '%T@ %f\0' |sort -zk 1nr |sed -z 's/^[^ ]* //' |xargs -0n1| head -n 5| tr "\n" " "`; do
+
+	for post in `find data/posts/ -type f -printf "%f "`; do
+		name=$(grep -i "{{{ name" $posts/$post | sed -e 's|{{{ name ||;s| }}}||' | head -n 1)
+		link=$(grep -i "{{{ link" $posts/$post | awk '{print $3}' | head -n 1)
+		tags=$(grep -i "{{{ tags" $posts/$post | awk '{print $3}' | head -n 1)
+		lang=$(grep -i "{{{ lang" $posts/$post | awk '{print $3}' | head -n 1)
+                image=$(grep -i "{{{ image" $posts/$post | awk '{print $3}' | head -n 1)
+	        date=$(grep -i "{{{ date" $posts/$post1 | awk -F" " '{print $3}' | head -n 1)
+	        [ -z "$date" ] && date=$(stat -c "%y" $posts/$post | awk -F"." '{print $1}')
+		if [ -z "$link" ]; then 
+			link=$post".html"
+		fi
+		
+		preview="preview"
+		[ -z "$name" ] && name=$(echo "$post"|sed -e 's|\.html||')
+
+                count=$(printf "0x%0.4x\n" $c)
+
+		echo "<tr><td>"
+		echo "$count] <img src=img/green.png> <a href=\"$link\">$name</a></td><td align=right><small>($date)</small>"
+		echo "</td></tr>"
+		let c=c+1
+		#echo "<a class=\"$class\" href=\""$url"\">"$name"</a>"
+## 		if [ -z "$link" ]; then
+## 			decho "Making post $post ..."
+## 			#mkpost $post $name > $out"/"$post".html"
+## 		echo "<hr><div class="message"><table class="message" ><tr>"
+## 		echo "<td width=\"120px\"><a class=\"tag\" href=\"tag.html\">Simple</a><a class=\"tag\" href=\"baker.html\">GNU</a></td>"
+## 		echo "<td width=\"*\"><font size=\"5pt\">"$name"</font></td>"
+## 		echo "<td width=\"50px\"><font size=\"2pt\">"$date"</font></td></tr>"
+## 		echo "<tr><td colspan=3>"
+## 		echo "$preview"
+## 		echo "<a class="page" href=\""$post"\">[Read more...]</a>"
+## 		echo "</td></tr></table></div>"
+## 			decho "Complete"
+## 		else
+## 			decho "Skipping post ... $post "
+## 		fi
+	done
+	echo "</table>"
+	#decho "POSTS processing complete."
+}
+
+mkposts-prev

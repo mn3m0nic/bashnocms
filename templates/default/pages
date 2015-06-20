@@ -1,0 +1,54 @@
+#!/bin/bash
+#-----------------------------------------------------------------------------#
+# generating pages
+#-----------------------------------------------------------------------------#
+#source etc/config
+#source lib/comm
+
+mkpage()
+{
+	page1=$1
+	name=$2
+	#decho ">>> $page from $pages/$page "
+        ./$template/html-begin
+	./$template/head $name
+	./$template/style
+        ./$template/table-main
+	selected_page=$page1
+        source ./$template/pages-list ""
+        source ./$template/tags
+	date=$(grep -i "{{{ date" $pages/$page1 | awk -F" " '{print $3}' | head -n 1)
+	[ -z "$date" ] && date=$(stat -c "%y" $pages/$page1 | awk -F"." '{print $1}')
+	### CONTENT OF PAGE ###
+	echo "<div class=message>"
+	echo "<p align=right><small>"$date"</small></p>"
+	echo "<pre>"
+	cat $pages/$page1 | egrep -v '^{{{ '
+	echo "</div>"
+	### END CONENT PAGE ###
+        ./$template/footer-pre
+        ./$template/footer
+        ./$template/html-end
+}
+
+mkpages-content()
+{
+	decho "making all PAGES content..."
+	for page in `find data/pages/ -type f -printf "%f "`; do
+		name=$(grep -i "{{{ name" $pages/$page | awk '{print $3}' | head -n 1)
+		link=$(grep -i "{{{ link" $pages/$page | awk '{print $3}' | head -n 1)
+		tags=$(grep -i "{{{ tag" $pages/$page | awk '{print $3}' | head -n 1)
+		[ -z "$name" ] && name=$(echo "$page"|sed -e 's|\.html||')
+		#echo "<a class=\"$class\" href=\""$url"\">"$name"</a>"
+		if [ -z "$link" ]; then
+			decho "Making page $page ..."
+			mkpage $page $name > $out"/"$page".html"
+			decho "Complete"
+		else
+			decho "Skipping page ... $page "
+		fi
+	done
+	decho "PAGES processing complete."
+}
+
+mkpages-content

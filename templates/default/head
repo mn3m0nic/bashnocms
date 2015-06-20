@@ -1,0 +1,19 @@
+#!/bin/bash
+# HEAD
+# 
+#
+#
+
+#
+
+cat << EOF
+<head>
+<meta name="author" content="mn3m" >
+<meta name="copyright" content="Nick Void">
+<meta name="keywords" content="mn3m official blog">
+<meta name="description" content="mn3m official blog">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8">
+<meta http-equiv="content-style-type" content="text/css">
+</head>
+EOF

@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+#
+#
+# making list of pages
+
+
+mkpageslist()
+{
+cat << EOF
+<div id="pages-main">
+EOF
+if [ -z "$selected_page" ]; then
+	root_class="page-sel"
+else
+	root_class="page"
+fi
+echo "<a class=\""$root_class"\" href=\"/\">/</a>"
+for page in `ls -1 $pages| tr "\n" " "`; do
+        name=$(grep -i "{{{ name" $pages/$page | awk -F" " '{print $3}' | head -n 1)
+        link=$(grep -i "{{{ link" $pages/$page | awk -F" " '{print $3}' | head -n 1)
+	#date=$(grep -i "{{{ date" $pages/$page | awk -F" " '{print $3}' | head -n 1)
+	#[ -z "$date" ] && date=$(stat -c "%y" $page | awk -F"." '{print $1}')
+        [ -z "$name" ] && name=$(echo "$page" | sed -e 's|\.html||')
+        [ -z "$link" ] && url=$page".html" || url=$link
+        # if page selected then use page-sel class else page class for style
+        [ "$page" == "$selected_page" ] && class="page-sel" || class="page"
+        echo "<a class=\"$class\" href=\""$url"\">"$name"</a>"
+done
+cat << EOF
+</div>
+EOF
+}
+
+mkpageslist
+
