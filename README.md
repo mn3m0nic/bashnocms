@@ -1,14 +1,16 @@
 bashnocms
 =========
-Simple static generator on BASH for blog.
+Simple static generator on shell script for personal blog.
 
 # Supports
 
 - pages in header;
 - posts
 - tags
+- rss
 
 
 CHANGELOG
 =========
-v0.01 released. init
+- 15.28.12 added RSS support
+- v0.01 released. init
