@@ -9,4 +9,5 @@ source ./$template/tags-init
 source ./$template/pages
 source ./$template/posts
 source ./$template/index
+source ./$template/rss
 decho "template building complete."

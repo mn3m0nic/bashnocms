@@ -1,0 +1,38 @@
+#!/bin/bash
+# mkrss
+# v0.01
+mkrss()
+{
+	echo '<?xml version="1.0" encoding="utf-8"?>'
+	echo '<rss version="2.0">'
+	echo '<channel>'
+	echo '<title>mn3m.info</title>'
+	echo '<description>just another blog with random shit</description>'
+	echo '<link>http://mn3m.info/rss.xml</link>'
+	for post in `ls -1 $posts| tr "\n" " "`; do
+		#decho "RSS: >>$post in $posts/$post >"
+		name=$(grep -i "{{{ name" $posts/$post | sed -e 's|{{{ name ||;s| }}}||' | head -n 1)
+		link=$(grep -i "{{{ link" $posts/$post | awk '{print $3}' | head -n 1)
+		tags=$(grep -i "{{{ tags" $posts/$post | awk '{print $3}' | head -n 1)
+		lang=$(grep -i "{{{ lang" $posts/$post | awk '{print $3}' | head -n 1)
+		image=$(grep -i "{{{ image" $posts/$post | awk '{print $3}' | head -n 1)
+		[ -z "$date" ] && date=$(stat -c "%y" $posts/$post | awk -F"." '{print $1}')
+		[ -z "$name" ] && name=$(echo "$post" | sed -e 's|\.html||')
+		[ -z "$link" ] && url=$post".html" || url=$link
+		#echo "<a class=\"$class\" href=\""$url"\">"$name"</a>"
+		echo "<item>"
+		echo "<title>$name</title>"
+		echo "<link>"$proto$sitename"/"$url"</link>"
+		echo "<pubDate>$date</pubDate>"
+		# TODO: add description
+		echo "</item>"
+	done
+	echo "</channel></rss>"
+}
+if [ -z "$RSS" ]; then
+	decho "RSS variable not set. Skip build RSS."
+else
+	decho "RSS>> START"
+	mkrss > $out"/"$RSS
+	decho "RSS<< END"
+fi
