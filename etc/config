@@ -13,3 +13,4 @@ debug=1
 tags_map=$cache/tags-map
 tags_index=$cache/tags-index
 template_title="sitename"
+RSS=rss.xml
