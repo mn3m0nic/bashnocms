@@ -1,3 +1,9 @@
+# ! Project is arhived and no longer maintained. !
+
+Check [Hugo](https://gohugo.io/) as alternative site generator.
+
+
+
 # bashnocms
 Simple static HTML/CSS-site generator on shell script for personal blog. It's not CMS. All you posts/pages should be placed in separate text files in posts/ and pages/ directories. Static files lives in pub directory.
 
